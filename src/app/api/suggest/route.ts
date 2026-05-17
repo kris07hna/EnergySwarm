@@ -35,7 +35,7 @@ Provide 3 strategic recommendations for grid improvement, focusing on:
 3. Long-term scalability
 `;
 
-    const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+    const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
     const response = await fetch(geminiUrl, {
       method: "POST",

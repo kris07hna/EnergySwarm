@@ -1,31 +1,30 @@
 import { NextResponse } from "next/server";
 
-/**
- * Get carbon intensity data from Electricity Maps API
- * Free tier available - shows carbon emissions of current grid mix
- */
+const REGION_BASED_INTENSITY: Record<string, number> = {
+  "40.7": 280, "34.0": 350, "41.8": 150, "51.0": 120,
+  "37.7": 320, "29.7": 450, "47.6": 180, "44.9": 200,
+};
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const latitude = parseFloat(searchParams.get("latitude") || "40");
-    const longitude = parseFloat(searchParams.get("longitude") || "-95");
+    const lat = searchParams.get("latitude") || "40";
+    const lon = searchParams.get("longitude") || "-95";
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lon);
 
-    // Using Open-Meteo Carbon Intensity API (free alternative)
-    // Returns approximate carbon intensity based on region
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=carbon_intensity,carbon_intensity_production&hourly=carbon_intensity&timezone=auto`;
+    let baseIntensity = 350;
 
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+    const regionKey = Object.keys(REGION_BASED_INTENSITY).find(k =>
+      Math.abs(parseFloat(k) - latitude) < 3
+    );
+    if (regionKey) baseIntensity = REGION_BASED_INTENSITY[regionKey];
+    if (longitude < -100) baseIntensity += 80;
+    if (longitude > -80) baseIntensity -= 30;
 
-    // Fallback carbon intensity calculation based on region
-    let baseIntensity = 500; // g CO2/kWh default
-
-    // Adjust based on region (rough estimates)
-    if (longitude > -100 && longitude < -80) {
-      baseIntensity = 250; // East Coast - cleaner grid
-    } else if (longitude < -100) {
-      baseIntensity = 400; // West - mixed
-    }
+    const hour = new Date().getHours();
+    const solarFactor = (hour >= 7 && hour <= 18) ? 0.7 : 1.0;
+    baseIntensity = Math.round(baseIntensity * solarFactor);
 
     return NextResponse.json({
       success: true,
@@ -33,13 +32,12 @@ export async function GET(request: Request) {
         current: baseIntensity,
         unit: "g CO2/kWh",
         timestamp: new Date().toISOString(),
-        forecast: Array.from({ length: 24 }, (_, i) => ({
-          hour: i,
-          intensity: baseIntensity + Math.sin(i / 4) * 100,
+        forecast: Array.from({ length: 24 }, (_, h) => ({
+          hour: h,
+          intensity: Math.round(baseIntensity * (h >= 7 && h <= 18 ? 0.7 : 1.0) + Math.sin(h / 4) * 50),
         })),
       },
       coordinates: { latitude, longitude },
-      apiData: data,
     });
   } catch (error) {
     console.error("Carbon Intensity API error:", error);
