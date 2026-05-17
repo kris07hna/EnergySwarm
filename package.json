@@ -1,0 +1,42 @@
+{
+  "name": "swarmgrid-ai",
+  "version": "0.1.0",
+  "description": "Multi-objective swarm optimization for sustainable energy grids",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@splinetool/react-spline": "^4.1.0",
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.7.7",
+    "clsx": "^2.1.1",
+    "dotenv": "^16.4.5",
+    "framer-motion": "^11.14.10",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.441.0",
+    "next": "^16.0.0",
+    "postcss": "^8.4.48",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
+    "recharts": "^2.15.3",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.7.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.16",
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "eslint": "^9.15.0",
+    "eslint-config-next": "^16.0.0"
+  }
+}

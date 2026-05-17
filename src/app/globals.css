@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  background: #020617;
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.card {
+  @apply bg-slate-800/50 border border-slate-700 rounded-lg p-6 backdrop-blur;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-primary {
+  @apply btn bg-blue-600 hover:bg-blue-700 text-white;
+}
+
+.btn-secondary {
+  @apply btn bg-slate-700 hover:bg-slate-600 text-white;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent;
+}
+
+.landing-section {
+  position: relative;
+}
+
+.landing-section::after {
+  content: "";
+  position: absolute;
+  inset: auto 10% 1.5rem 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  pointer-events: none;
+}
+
+.glass-panel {
+  @apply rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_100px_rgba(2,6,23,0.45)];
+}
+
+@keyframes pixelPulse {
+  0%,
+  100% {
+    transform: scale(0.76);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pixel-trail-cell {
+    animation: pixelPulse 5s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .pixel-trail-cell,
+  .landing-section * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Perfect Scroll styles */
+.perfect-scroll {
+  min-height: 400vh;
+  position: relative;
+  background: linear-gradient(180deg, rgba(2,6,23,1) 0%, rgba(2,6,23,0.95) 40%, rgba(15,23,42,1) 100%);
+}
+.perfect-scroll .sticky {
+  position: sticky;
+  top: 10vh;
+  height: 80vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index: 10;
+}
+.scene {
+  width: min(60vmin, 600px);
+  height: min(60vmin, 600px);
+  perspective: 1400px;
+  position: relative;
+}
+.cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+.cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size: clamp(1rem, 2.5vmin, 2rem);
+  color: white;
+  border-radius: 1rem;
+  backface-visibility: hidden;
+  box-shadow: 0 30px 80px rgba(2,6,23,0.6);
+}
+.cube-face.front { transform: rotateY(0deg) translateZ(30vmin); background: linear-gradient(135deg,#06b6d4,#3b82f6); }
+.cube-face.back { transform: rotateY(180deg) translateZ(30vmin); background: linear-gradient(135deg,#a78bfa,#f472b6); }
+.cube-face.right { transform: rotateY(90deg) translateZ(30vmin); background: linear-gradient(135deg,#f97316,#f43f5e); }
+.cube-face.left { transform: rotateY(-90deg) translateZ(30vmin); background: linear-gradient(135deg,#34d399,#10b981); }
+.cube-face.top { transform: rotateX(90deg) translateZ(30vmin); background: linear-gradient(135deg,#60a5fa,#7c3aed); }
+.cube-face.bottom { transform: rotateX(-90deg) translateZ(30vmin); background: linear-gradient(135deg,#facc15,#fb7185); }
+
+.orb {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  background: radial-gradient(circle at 30% 30%, rgba(99,102,241,0.9), rgba(59,130,246,0.6));
+  box-shadow: 0 10px 40px rgba(59,130,246,0.2);
+}
+.orb-2 { top: 60%; left: 80%; width: 3.5rem; height: 3.5rem; background: radial-gradient(circle at 30% 30%, rgba(236,72,153,0.9), rgba(168,85,247,0.6)); }
+
+.scroll-content { width: 100%; }
+.scroll-section { display: flex; align-items:center; justify-content:flex-start; gap: 2rem; }
