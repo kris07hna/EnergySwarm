@@ -20,19 +20,7 @@ Multi-objective swarm intelligence platform for renewable energy grid optimizati
 
 ## Workflow
 
-```mermaid
-flowchart LR
-    A[User opens app] --> B[Data agents fetch live metrics]
-    B --> C{Run optimization?}
-    C -- Yes --> D[MOPSO evaluates 5 objectives]
-    D --> E[Pareto archive of solutions]
-    E --> F[Representative solution selected]
-    F --> G{Request AI analysis?}
-    G -- Yes --> H[Gemini returns strengths, risks, actions]
-    G -- No --> I[Review results]
-    H --> I
-    I --> J[Explore maps for site selection]
-```
+![Workflow](https://raw.githubusercontent.com/kris07hna/EnergySwarm/main/public/workflow.png)
 
 ### Step-by-step
 
@@ -45,98 +33,7 @@ flowchart LR
 
 ## Architecture
 
-```mermaid
-graph TB
-    subgraph Client["Next.js Frontend"]
-        LP["Landing Page"]
-        OPT["PSO Studio"]
-        MAP["Map Intelligence"]
-        AGT["Swarm Command"]
-        DASH["Analytics Board"]
-        UI["Glassmorphic UI Components"]
-    end
-
-    subgraph API["Next.js API Routes"]
-        OR["/api/optimize"]
-        WTH["/api/weather"]
-        SLR["/api/solar"]
-        CRB["/api/carbon"]
-        GRD["/api/grid-status"]
-        FRC["/api/forecast"]
-        MKT["/api/market-data"]
-        RES["/api/resilience"]
-        STR["/api/storage"]
-        GEO["/api/geo"]
-        SUG["/api/suggest"]
-    end
-
-    subgraph Core["Optimization Core"]
-        MOPSO["MOPSO Engine"]
-        PSO["PSO Optimizer"]
-        HELP["Helpers / Interpreters"]
-        FCST["Forecast Models"]
-        OLS["OLS Regression"]
-    end
-
-    subgraph External["External Data Sources"]
-        NM["NASA POWER API"]
-        OM["Open-Meteo API"]
-        WGOV["Weather.gov"]
-        NREL["NREL PVWatts"]
-        EIA["EIA Pricing"]
-        USGS["USGS Earthquakes"]
-        GEMINI["Gemini AI"]
-    end
-
-    LP --> UI
-    OPT --> OR
-    MAP --> WTH
-    AGT --> OR
-    DASH --> FRC
-
-    OR --> MOPSO
-    MOPSO --> PSO
-    MOPSO --> HELP
-    WTH --> OM
-    SLR --> NM
-    CRB --> OM
-    GRD --> EIA
-    FRC --> FCST
-    FRC --> OLS
-    MKT --> EIA
-    RES --> USGS
-    STR --> HELP
-    GEO --> NM
-    SUG --> GEMINI
-```
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend as Next.js App
-    participant OptAPI as /api/optimize
-    participant MOPSO as MOPSO Engine
-    participant ExtAPIs as External APIs
-    participant Gemini as Gemini AI
-
-    User->>Frontend: Navigate to /optimize
-    Frontend->>ExtAPIs: Fetch weather, solar, carbon, grid data
-    ExtAPIs-->>Frontend: Return real-time metrics
-    User->>Frontend: Click "Run Optimization"
-    Frontend->>OptAPI: POST /api/optimize
-    OptAPI->>MOPSO: Initialize 42 particles, 120 iterations
-    loop 120 iterations
-        MOPSO->>MOPSO: Evaluate 5-objective fitness
-        MOPSO->>MOPSO: Update velocities and positions
-        MOPSO->>MOPSO: Maintain Pareto archive
-    end
-    MOPSO-->>OptAPI: Return Pareto archive + representative solution
-    OptAPI-->>Frontend: JSON: { result, recommendations, pareto_count }
-    User->>Frontend: Click "Reason with AI"
-    Frontend->>Gemini: POST optimization results + context
-    Gemini-->>Frontend: Structured insight: strengths, risks, actions
-    Frontend-->>User: Display recommendations and AI analysis
-```
+![System Architecture](https://raw.githubusercontent.com/kris07hna/EnergySwarm/main/public/systemarchitexutre.png)
 
 ## Folder Structure
 
@@ -294,20 +191,7 @@ The `/api/suggest` endpoint sends optimization results and real-time grid contex
 
 ### Algorithm Flow
 
-```mermaid
-flowchart TD
-    A[Initialize 42 particles with random positions] --> B[Evaluate 5-objective fitness for each particle]
-    B --> C[Update personal best for each particle]
-    C --> D[Update Pareto archive with non-dominated solutions]
-    D --> E[Compute crowding distance for archive members]
-    E --> F[Select leader from archive using tournament selection]
-    F --> G[Update velocity: cognitive + social + inertia]
-    G --> H[Update position with bounds clamping]
-    H --> I[Apply mutation to stagnating particles]
-    I --> J{Iteration < 120?}
-    J -- Yes --> B
-    J -- No --> K[Return Pareto archive + representative solution]
-```
+![How It Works](https://raw.githubusercontent.com/kris07hna/EnergySwarm/main/public/howitworks.png)
 
 ### Configuration
 
