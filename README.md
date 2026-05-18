@@ -4,6 +4,7 @@ Multi-objective swarm intelligence platform for renewable energy grid optimizati
 
 ## Table of Contents
 
+- [Workflow](#workflow)
 - [Architecture](#architecture)
 - [Folder Structure](#folder-structure)
 - [Key Features](#key-features)
@@ -16,6 +17,31 @@ Multi-objective swarm intelligence platform for renewable energy grid optimizati
 - [Business Impact](#business-impact)
 - [Tech Stack](#tech-stack)
 - [License](#license)
+
+## Workflow
+
+```mermaid
+flowchart LR
+    A[User opens app] --> B[Data agents fetch live metrics]
+    B --> C{Run optimization?}
+    C -- Yes --> D[MOPSO evaluates 5 objectives]
+    D --> E[Pareto archive of solutions]
+    E --> F[Representative solution selected]
+    F --> G{Request AI analysis?}
+    G -- Yes --> H[Gemini returns strengths, risks, actions]
+    G -- No --> I[Review results]
+    H --> I
+    I --> J[Explore maps for site selection]
+```
+
+### Step-by-step
+
+1. **Data collection** -- Six agents poll free APIs (NASA POWER, Open-Meteo, EIA, USGS) for weather, solar, carbon, grid, pricing, and geospatial data.
+2. **Optimization** -- The MOPSO engine runs 120 iterations across 42 particles, each encoding a different energy grid configuration.
+3. **Pareto filtering** -- Non-dominated solutions are stored in an archive ranked by crowding distance, exposing the full trade-space.
+4. **Solution selection** -- A scalarization function picks the single best trade-off from the archive.
+5. **AI reasoning** (optional) -- Gemini analyzes the result and returns structured recommendations.
+6. **Map exploration** -- Users inspect geographic coordinates on the Leaflet map to validate deployment feasibility.
 
 ## Architecture
 
