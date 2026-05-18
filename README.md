@@ -33,7 +33,7 @@ Multi-objective swarm intelligence platform for renewable energy grid optimizati
 
 ## Architecture
 
-![System Architecture](https://raw.githubusercontent.com/kris07hna/EnergySwarm/main/public/systemarchitexutre.png)
+![System Architecture](./public/systemarchitexutre.png)
 
 ## Folder Structure
 
@@ -191,7 +191,7 @@ The `/api/suggest` endpoint sends optimization results and real-time grid contex
 
 ### Algorithm Flow
 
-![How It Works](https://raw.githubusercontent.com/kris07hna/EnergySwarm/main/public/howitworks.png)
+![How It Works](./public/howitworks.png)
 
 ### Configuration
 
