@@ -6,9 +6,14 @@ import { interpretPSOResult, getRecommendations } from "@/lib/pso/helpers";
 export async function POST() {
   try {
     const config = createDefaultSwarmConfig(
-      50, // More particles for better exploration
-      150 // More iterations
+      42, // Slightly smaller swarm with stronger adaptive search
+      120 // Fewer iterations; better convergence behavior
     );
+    config.archiveLimit = 80;
+    config.leaderPoolSize = 5;
+    config.mutationRate = 0.2;
+    config.mutationScale = 3.5;
+    config.stagnationThreshold = 10;
 
     const objectives = createDefaultObjectives();
 

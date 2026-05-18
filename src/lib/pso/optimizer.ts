@@ -9,6 +9,7 @@ export interface Particle {
   bestPosition: number[];
   bestCost: number;
   crowdingDistance?: number;
+  stagnation?: number;
 }
 
 export interface ObjectiveWeights {
@@ -36,10 +37,16 @@ export class PSOOptimizer {
   private config: SwarmConfig;
   private objectives: ObjectiveWeights;
   private iteration: number = 0;
+  private maxVelocity: number;
+  private stagnationThreshold = 8;
+  private mutationChance = 0.18;
+  private mutationScale: number;
 
   constructor(config: SwarmConfig, objectives: ObjectiveWeights) {
     this.config = config;
     this.objectives = objectives;
+    this.maxVelocity = Math.max(3, (config.bounds.max - config.bounds.min) * 0.18);
+    this.mutationScale = (config.bounds.max - config.bounds.min) * 0.08;
     this.initializeSwarm();
   }
 
@@ -59,6 +66,7 @@ export class PSOOptimizer {
         velocity,
         bestPosition: [...position],
         bestCost: this.evaluateFitness(position),
+        stagnation: 0,
       };
 
       this.particles.push(particle);
@@ -144,36 +152,72 @@ export class PSOOptimizer {
     );
   }
 
-  public step(): void {
-    for (const particle of this.particles) {
-      // Update velocity
-      const r1 = Math.random();
-      const r2 = Math.random();
+  private clampVelocity(value: number): number {
+    return Math.max(-this.maxVelocity, Math.min(this.maxVelocity, value));
+  }
 
+  private mutateParticle(particle: Particle): number {
+    const spread = this.mutationScale * Math.max(0.35, 1 - this.iteration / Math.max(1, this.config.numIterations));
+
+    particle.position = particle.bestPosition.map((value) =>
+      Math.max(
+        this.config.bounds.min,
+        Math.min(this.config.bounds.max, value + (Math.random() - 0.5) * spread)
+      )
+    );
+
+    particle.velocity = particle.velocity.map((value) =>
+      this.clampVelocity(value * 0.35 + (Math.random() - 0.5) * 1.5)
+    );
+
+    return this.evaluateFitness(particle.position);
+  }
+
+  public step(): void {
+    const progress = this.iteration / Math.max(1, this.config.numIterations);
+    const inertia = Math.max(0.38, this.config.w * (1 - progress) + 0.12);
+
+    for (const particle of this.particles) {
       particle.velocity = particle.velocity.map((v, i) => {
+        const r1 = Math.random();
+        const r2 = Math.random();
         const cognitive = this.config.c1 * r1 * (particle.bestPosition[i] - particle.position[i]);
         const social = this.config.c2 * r2 * (this.globalBestPosition[i] - particle.position[i]);
-        return this.config.w * v + cognitive + social;
+        return this.clampVelocity(inertia * v + cognitive + social);
       });
 
-      // Update position
       particle.position = particle.position.map(
         (p, i) => p + particle.velocity[i]
       );
       particle.position = this.clampVector(particle.position);
 
-      // Evaluate fitness
-      const fitness = this.evaluateFitness(particle.position);
+      let fitness = this.evaluateFitness(particle.position);
 
-      // Update personal best
       if (fitness < particle.bestCost) {
         particle.bestCost = fitness;
         particle.bestPosition = [...particle.position];
+        particle.stagnation = 0;
 
-        // Update global best
         if (fitness < this.globalBestCost) {
           this.globalBestCost = fitness;
           this.globalBestPosition = [...particle.bestPosition];
+        }
+      } else {
+        particle.stagnation = (particle.stagnation ?? 0) + 1;
+
+        if (particle.stagnation >= this.stagnationThreshold && Math.random() < this.mutationChance) {
+          fitness = this.mutateParticle(particle);
+          particle.stagnation = 0;
+
+          if (fitness < particle.bestCost) {
+            particle.bestCost = fitness;
+            particle.bestPosition = [...particle.position];
+
+            if (fitness < this.globalBestCost) {
+              this.globalBestCost = fitness;
+              this.globalBestPosition = [...particle.bestPosition];
+            }
+          }
         }
       }
     }

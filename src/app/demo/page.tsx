@@ -1,5 +1,5 @@
-import { HomeDemo } from "@/components/home-demo";
+import { redirect } from "next/navigation";
 
 export default function DemoPage() {
-  return <HomeDemo />;
+  redirect("/");
 }

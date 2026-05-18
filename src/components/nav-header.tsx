@@ -1,65 +1,40 @@
-"use client"; 
+"use client";
 
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-function NavHeader() {
-  const [position, setPosition] = useState({
-    left: 0,
-    width: 0,
-    opacity: 0,
-  });
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/agents", label: "Swarm Command" },
+  { href: "/analytics-board", label: "Analytics Board" },
+  { href: "/optimize", label: "PSO Studio" },
+  { href: "/maps", label: "Map Intelligence" },
+] as const;
+
+export default function NavHeader() {
+  const pathname = usePathname();
 
   return (
-    <ul
-      className="relative mx-auto flex w-fit rounded-full border border-white/20 bg-white/10 p-1 backdrop-blur-xl"
-      onMouseLeave={() => setPosition((pv) => ({ ...pv, opacity: 0 }))}
-    >
-      <Tab setPosition={setPosition}>Home</Tab>
-      <Tab setPosition={setPosition}>About</Tab>
-      <Tab setPosition={setPosition}>Services</Tab>
-      <Tab setPosition={setPosition}>Contact</Tab>
+    <nav className="w-full max-w-5xl overflow-x-auto rounded-full border border-white/15 bg-white/8 px-2 py-2 shadow-[0_14px_50px_rgba(2,6,23,0.28)] backdrop-blur-xl">
+      <div className="grid min-w-[560px] grid-cols-5 items-center gap-2 text-center sm:min-w-0">
+        {navItems.map((item) => {
+          const active = pathname === item.href;
 
-      <Cursor position={position} />
-    </ul>
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition ${
+                active
+                  ? "bg-cyan-400 text-slate-950"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }
-
-const Tab = ({
-  children,
-  setPosition,
-}: {
-  children: React.ReactNode;
-  setPosition: any;
-}) => {
-  const ref = useRef<HTMLLIElement>(null);
-  return (
-    <li
-      ref={ref}
-      onMouseEnter={() => {
-        if (!ref.current) return;
-
-        const { width } = ref.current.getBoundingClientRect();
-        setPosition({
-          width,
-          opacity: 1,
-          left: ref.current.offsetLeft,
-        });
-      }}
-      className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase text-white md:px-5 md:py-3 md:text-base"
-    >
-      {children}
-    </li>
-  );
-};
-
-const Cursor = ({ position }: { position: any }) => {
-  return (
-    <motion.li
-      animate={position}
-      className="absolute z-0 h-7 rounded-full bg-white/20 md:h-12"
-    />
-  );
-};
-
-export default NavHeader;

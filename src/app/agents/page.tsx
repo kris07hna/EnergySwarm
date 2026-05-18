@@ -1,5 +1,5 @@
-import SwarmAgents from "@/components/swarm-agents";
+import SwarmCommandCenter from "@/components/SwarmCommandCenter";
 
 export default function AgentsPage() {
-  return <SwarmAgents />;
+  return <SwarmCommandCenter />;
 }

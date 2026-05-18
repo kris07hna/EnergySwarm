@@ -74,6 +74,18 @@ body {
   @apply rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_100px_rgba(2,6,23,0.45)];
 }
 
+/* Gemini carousel specific styles */
+.gemini-carousel {
+  @apply rounded-[1.25rem] border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_30px_80px_rgba(2,6,23,0.45)];
+}
+.gemini-title {
+  @apply text-2xl lg:text-3xl font-extrabold tracking-tight;
+}
+.gemini-body {
+  color: rgba(255,255,255,0.88);
+  line-height: 1.65;
+}
+
 @keyframes pixelPulse {
   0%,
   100% {

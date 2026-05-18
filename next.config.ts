@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
   images: {
     remotePatterns: [
       {
@@ -9,10 +11,9 @@ const nextConfig: NextConfig = {
         hostname: "**",
       },
     ],
+    formats: ["image/avif", "image/webp"],
   },
-  env: {
-    NEXT_PUBLIC_GEMINI_API_KEY: process.env.NEXT_PUBLIC_GEMINI_API_KEY || "",
-  },
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

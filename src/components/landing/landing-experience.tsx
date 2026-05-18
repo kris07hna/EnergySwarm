@@ -10,7 +10,7 @@ import { PixelTrail } from "@/components/ui/pixel-trail";
 import { GooeyFilter } from "@/components/ui/gooey-filter";
 import { FloatingHeader } from "./floating-header";
 import { FloatingFooter } from "./floating-footer";
-import { SplineBackdrop } from "./spline-backdrop";
+import { NatureSwarmCanvas } from "./nature-swarm-canvas";
 
 function SectionCard({
   title,
@@ -65,14 +65,13 @@ export function LandingExperience() {
           id="home"
           className="landing-section relative min-h-screen snap-start overflow-hidden border-b border-white/5"
         >
-          <SplineBackdrop
-            imageSrc="/dark-nature-wfvuga4py1sgn29r.jpg"
-            imageAlt="Dark nature landscape"
-            sceneUrl="https://prod.spline.design/e4htP5eWR4RsVvkz/scene.splinecode"
+          <NatureSwarmCanvas
+            imageSrc="/mystical-forest-2880x1800-14976.jpg"
+            imageAlt="Nature-backed swarm canvas"
           />
 
           <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-4 py-28 sm:px-6 lg:px-8">
-            {/* Only show the hero overlay after the user scrolls; first fold will display the Spline backdrop + header */}
+            {/* Only show the hero overlay after the user scrolls so the nature canvas stays visible on first paint. */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={showHeroContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -84,6 +83,19 @@ export function LandingExperience() {
                   <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-100 backdrop-blur-xl">
                     <Sparkles className="h-4 w-4" />
                     Research-grade swarm intelligence
+                  </div>
+
+                  <div className="mb-6 grid max-w-3xl gap-3 sm:grid-cols-3">
+                    {[
+                      { title: "Operator", note: "Starts the swarm and monitors map motion." },
+                      { title: "Analyst", note: "Reads the tables, graphs, and recommendations." },
+                      { title: "Planner", note: "Uses the PSO summary to stage the next action." },
+                    ].map((role) => (
+                      <div key={role.title} className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
+                        <div className="text-[10px] uppercase tracking-[0.35em] text-cyan-200/70">{role.title}</div>
+                        <p className="mt-2 text-sm leading-6 text-white/68">{role.note}</p>
+                      </div>
+                    ))}
                   </div>
 
                   <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl">
@@ -125,8 +137,8 @@ export function LandingExperience() {
           className="landing-section relative min-h-screen snap-start overflow-hidden border-b border-white/5 bg-black"
         >
           <img
-            src="https://images.aiscribbles.com/34fe5695dbc942628e3cad9744e8ae13.png?v=60d084"
-            alt="Impressionist background"
+            src="/nature2.jpg"
+            alt="Nature background"
             className="absolute inset-0 h-full w-full object-cover opacity-55"
           />
 

@@ -79,6 +79,7 @@ export class MOPSO {
   private mutationRate: number;
   private mutationScale: number;
   private stagnationThreshold: number;
+  private maxVelocity: number;
 
   constructor(config: SwarmConfig) {
     this.config = config;
@@ -87,6 +88,7 @@ export class MOPSO {
     this.mutationRate = config.mutationRate ?? 0.15;
     this.mutationScale = config.mutationScale ?? 4;
     this.stagnationThreshold = config.stagnationThreshold ?? 12;
+    this.maxVelocity = Math.max(3, (this.config.bounds.max - this.config.bounds.min) * 0.18);
     this.initialize();
   }
 
@@ -130,11 +132,16 @@ export class MOPSO {
   }
 
   private mutateParticle(particle: MOParticle) {
+    const spread = this.mutationScale * Math.max(0.3, 1 - this.getProgressFactor());
     particle.position = particle.position.map((value, index) => {
-      const spread = this.mutationScale * (1 - index / Math.max(1, particle.position.length - 1));
-      return clamp(value + jitter(spread), this.config.bounds.min, this.config.bounds.max);
+      const axisSpread = spread * (1 - index / Math.max(1, particle.position.length - 1));
+      return clamp(value + jitter(axisSpread), this.config.bounds.min, this.config.bounds.max);
     });
-    particle.velocity = particle.velocity.map((value) => value * 0.5 + jitter(1.2));
+    particle.velocity = particle.velocity.map((value) => clamp(value * 0.5 + jitter(1.2), -this.maxVelocity, this.maxVelocity));
+  }
+
+  private getProgressFactor() {
+    return this.config.numIterations === 0 ? 0 : this.archive.length / Math.max(1, this.config.numIterations);
   }
 
   // user-supplied objective function (synchronous)
@@ -174,7 +181,7 @@ export class MOPSO {
     }
     this.archive.push({ position: [...candidatePos], objectives: [...candidateObj] });
     // limit archive size by crowding
-    if (this.archive.length > 100) {
+    if (this.archive.length > this.archiveLimit) {
       const objs = this.archive.map(a => a.objectives);
       const crowd = computeCrowding(objs);
       const pairs = this.archive.map((a, i) => ({ a, c: crowd[i] }));
@@ -194,15 +201,19 @@ export class MOPSO {
     }
 
     for (let iter = 0; iter < numIterations; iter++) {
-      const w = Math.max(0.35, this.config.w * (1 - iter / numIterations) + 0.15); // decay
+      const w = Math.max(0.38, this.config.w * (1 - iter / Math.max(1, numIterations)) + 0.12);
       for (const p of this.particles) {
-        const r1 = Math.random();
-        const r2 = Math.random();
         // select global guide from archive randomly (diversity)
         const guide = this.selectLeader() || { position: p.pbestPos };
 
         p.velocity = p.velocity.map((v, i) =>
-          w * v + this.config.c1 * r1 * (p.pbestPos[i] - p.position[i]) + this.config.c2 * r2 * (guide.position[i] - p.position[i])
+          clamp(
+            w * v +
+              this.config.c1 * Math.random() * (p.pbestPos[i] - p.position[i]) +
+              this.config.c2 * Math.random() * (guide.position[i] - p.position[i]),
+            -this.maxVelocity,
+            this.maxVelocity
+          )
         );
 
         p.position = p.position.map((pos, i) => pos + p.velocity[i]);
@@ -225,6 +236,13 @@ export class MOPSO {
         if (p.stagnation >= this.stagnationThreshold && Math.random() < this.mutationRate) {
           this.mutateParticle(p);
           p.stagnation = 0;
+
+          const mutatedObj = this.evaluateObjectives(p.position);
+          if (p.pbestObj.length === 0 || dominates(mutatedObj, p.pbestObj)) {
+            p.pbestObj = [...mutatedObj];
+            p.pbestPos = [...p.position];
+          }
+          this.updateArchive(p.position, mutatedObj);
         }
       }
     }
