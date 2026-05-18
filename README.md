@@ -1,368 +1,624 @@
-# SwarmGrid AI - Multi-Objective Swarm Optimization for Sustainable Energy
+# SwarmGrid AI
 
-![SwarmGrid AI](https://img.shields.io/badge/SwarmGrid-AI-blue?style=flat-square)
-![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=flat-square)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+Multi-objective swarm intelligence platform for renewable energy grid optimization. SwarmGrid AI applies Particle Swarm Optimization (PSO) across five objectives -- cost, sustainability, energy output, disaster resilience, and maintenance feasibility -- to produce deployable energy grid configurations backed by real-time meteorological and geospatial data.
 
-## 🌍 Project Overview
+## Table of Contents
 
-SwarmGrid AI is an **open-source, fully free** energy grid optimization platform using **multi-objective Particle Swarm Optimization (PSO)**. It simultaneously optimizes across 5 key dimensions:
+- [Architecture](#architecture)
+- [Folder Structure](#folder-structure)
+- [Key Features](#key-features)
+- [Optimization Engine](#optimization-engine)
+- [API Documentation](#api-documentation)
+- [Getting Started](#getting-started)
+- [Deployment](#deployment)
+- [Real-World Application](#real-world-application)
+- [Scalability and Roadmap](#scalability-and-roadmap)
+- [Business Impact](#business-impact)
+- [Tech Stack](#tech-stack)
+- [License](#license)
 
-- 💰 **Cost** - Minimize infrastructure and operational expenses
-- 🌱 **Sustainability** - Maximize renewable energy integration (solar + wind)
-- ⚡ **Energy Output** - Optimize power generation capacity
-- 🛡️ **Disaster Resilience** - Build redundant, fault-tolerant systems
-- 🔧 **Maintenance Feasibility** - Ensure operational practicality
+## Architecture
 
-Perfect for hackathons, smart city planning, climate research, and government energy policy.
+```mermaid
+graph TB
+    subgraph Client["Next.js Frontend"]
+        LP["Landing Page"]
+        OPT["PSO Studio"]
+        MAP["Map Intelligence"]
+        AGT["Swarm Command"]
+        DASH["Analytics Board"]
+        UI["Glassmorphic UI Components"]
+    end
 
-## ✨ Key Features
+    subgraph API["Next.js API Routes"]
+        OR["/api/optimize"]
+        WTH["/api/weather"]
+        SLR["/api/solar"]
+        CRB["/api/carbon"]
+        GRD["/api/grid-status"]
+        FRC["/api/forecast"]
+        MKT["/api/market-data"]
+        RES["/api/resilience"]
+        STR["/api/storage"]
+        GEO["/api/geo"]
+        SUG["/api/suggest"]
+    end
 
-### 🔬 Advanced Optimization
-- **Custom PSO Implementation** - TypeScript-based particle swarm optimization
-- **Multi-Objective Balance** - Weighted optimization across 5 key metrics
-- **Real-time Visualization** - Live charts and progress tracking
+    subgraph Core["Optimization Core"]
+        MOPSO["MOPSO Engine"]
+        PSO["PSO Optimizer"]
+        HELP["Helpers / Interpreters"]
+        FCST["Forecast Models"]
+        OLS["OLS Regression"]
+    end
 
-### 🗺️ Interactive Maps
-- **Leaflet.js + OpenStreetMap** - Free, open-source mapping
-- **Solar Potential Zones** - Identify high-efficiency areas
-- **Wind Resource Mapping** - Visualize wind patterns
-- **Deployment Planning** - Strategic site selection
+    subgraph External["External Data Sources"]
+        NM["NASA POWER API"]
+        OM["Open-Meteo API"]
+        WGOV["Weather.gov"]
+        NREL["NREL PVWatts"]
+        EIA["EIA Pricing"]
+        USGS["USGS Earthquakes"]
+        GEMINI["Gemini AI"]
+    end
 
-### 🌤️ Weather & Environmental Data
-- **NASA POWER API** - Free solar radiation data (no API key needed!)
-- **Open-Meteo** - Free weather forecasts and historical data
-- **No API Costs** - All data sources are completely free
+    LP --> UI
+    OPT --> OR
+    MAP --> WTH
+    AGT --> OR
+    DASH --> FRC
 
-### 📊 Analytics Dashboard
-- **Recharts Integration** - Professional charts and graphs
-- **Real-time Metrics** - CPU, memory, energy distribution
-- **Comparative Analysis** - Before/after optimization views
-
-### 🤖 AI Suggestions
-- **Gemini API Integration** - Smart recommendations for grid improvement
-- **Context-Aware** - Based on specific optimization results
-- **Wise Token Usage** - Efficient API calls
-
-## 🚀 Tech Stack
-
-| Category | Technology | Why? |
-|----------|-----------|------|
-| **Frontend** | Next.js 16 | Fast, production-ready, built-in API routes |
-| **Styling** | Tailwind CSS 4.0 | Utility-first, fully customizable |
-| **UI Components** | shadcn/ui + Lucide Icons | Accessible, beautiful components |
-| **Animations** | Framer Motion | Smooth, performant animations |
-| **Maps** | Leaflet.js + React Leaflet | Lightweight, feature-rich mapping |
-| **Charts** | Recharts | React-friendly charting library |
-| **Language** | TypeScript 5.6 | Type-safe, scalable development |
-| **Deployment** | Vercel | Free, seamless Next.js hosting |
-| **Database** | Supabase (optional) | PostgreSQL + Auth, free tier |
-| **Weather** | Open-Meteo + NASA POWER | Free APIs, no authentication |
-| **AI** | Gemini API | Free tier available |
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js 18+ ([download](https://nodejs.org/))
-- npm or pnpm
-
-### Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/swarmgrid-ai.git
-cd swarmgrid-ai
-
-# Install dependencies
-npm install
-# or
-pnpm install
-
-# Create environment file
-cp .env.example .env.local
-
-# Add your Gemini API key (optional for AI suggestions)
-# Get it from: https://ai.google.dev/
-
-# Start development server
-npm run dev
+    OR --> MOPSO
+    MOPSO --> PSO
+    MOPSO --> HELP
+    WTH --> OM
+    SLR --> NM
+    CRB --> OM
+    GRD --> EIA
+    FRC --> FCST
+    FRC --> OLS
+    MKT --> EIA
+    RES --> USGS
+    STR --> HELP
+    GEO --> NM
+    SUG --> GEMINI
 ```
 
-Visit http://localhost:3000 in your browser.
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend as Next.js App
+    participant OptAPI as /api/optimize
+    participant MOPSO as MOPSO Engine
+    participant ExtAPIs as External APIs
+    participant Gemini as Gemini AI
 
-## 🎯 Usage
-
-### 1. **Dashboard** (`/`)
-Overview of current grid metrics and key statistics
-
-### 2. **Optimization** (`/optimize`)
-- Click "Run PSO Algorithm"
-- Watch real-time PSO optimization
-- View results with detailed breakdowns
-- Get AI-powered recommendations
-
-### 3. **Maps** (`/maps`)
-- Explore solar and wind potential areas
-- Interactive markers for deployment sites
-- OpenStreetMap base layer
-
-## 🔧 Configuration
-
-### Adjust PSO Parameters
-Edit [src/lib/pso/optimizer.ts](src/lib/pso/optimizer.ts):
-
-```typescript
-// Number of particles in the swarm
-numParticles: 50
-
-// Optimization iterations
-numIterations: 150
-
-// Inertia weight (0-1, controls velocity influence)
-w: 0.7
-
-// Cognitive parameter (self-attraction)
-c1: 1.5
-
-// Social parameter (group-attraction)
-c2: 1.5
+    User->>Frontend: Navigate to /optimize
+    Frontend->>ExtAPIs: Fetch weather, solar, carbon, grid data
+    ExtAPIs-->>Frontend: Return real-time metrics
+    User->>Frontend: Click "Run Optimization"
+    Frontend->>OptAPI: POST /api/optimize
+    OptAPI->>MOPSO: Initialize 42 particles, 120 iterations
+    loop 120 iterations
+        MOPSO->>MOPSO: Evaluate 5-objective fitness
+        MOPSO->>MOPSO: Update velocities and positions
+        MOPSO->>MOPSO: Maintain Pareto archive
+    end
+    MOPSO-->>OptAPI: Return Pareto archive + representative solution
+    OptAPI-->>Frontend: JSON: { result, recommendations, pareto_count }
+    User->>Frontend: Click "Reason with AI"
+    Frontend->>Gemini: POST optimization results + context
+    Gemini-->>Frontend: Structured insight: strengths, risks, actions
+    Frontend-->>User: Display recommendations and AI analysis
 ```
 
-### Adjust Objective Weights
-Edit [src/lib/pso/helpers.ts](src/lib/pso/helpers.ts):
+## Folder Structure
 
-```typescript
+```
+EnergySwarm/
+├── public/                              # Static assets
+│   ├── nature-4k-pc-full-hd-wallpaper-preview.jpg
+│   ├── mystical-forest-2880x1800-14976.jpg
+│   ├── swarmbackgorund.jpg
+│   └── nature-background-high-resolution...jpg
+│
+├── src/
+│   ├── app/                             # Next.js App Router
+│   │   ├── page.tsx                     # Landing page
+│   │   ├── layout.tsx                   # Root layout
+│   │   ├── globals.css                  # Global styles
+│   │   │
+│   │   ├── agents/                      # Swarm command center
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── analytics-board/             # Research-grade analytics
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── dashboard/                   # Metrics dashboard
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── demo/                        # Interactive demo
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── maps/                        # Geospatial visualization
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── optimize/                    # PSO optimization studio
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── scroll/                      # Scroll-driven demo
+│   │   │   └── page.tsx
+│   │   │
+│   │   └── api/                         # API Routes (13 endpoints)
+│   │       ├── optimize/route.ts        # MOPSO optimization endpoint
+│   │       ├── suggest/route.ts         # Gemini AI analysis endpoint
+│   │       ├── weather/route.ts         # Open-Meteo weather data
+│   │       ├── solar/route.ts           # NASA POWER solar irradiance
+│   │       ├── carbon/route.ts          # Carbon intensity forecast
+│   │       ├── grid-status/route.ts     # Grid reliability and demand
+│   │       ├── forecast/route.ts        # 7-day demand/solar/wind forecast
+│   │       ├── market-data/route.ts     # Electricity pricing (EIA)
+│   │       ├── resilience/route.ts      # Disaster hazard assessment
+│   │       ├── storage/route.ts         # Energy storage optimization
+│   │       ├── geo/route.ts             # Geospatial terrain data
+│   │       └── prices/route.ts          # Real-time electricity prices
+│   │
+│   ├── components/                      # React components
+│   │   ├── landing/
+│   │   │   ├── landing-experience.tsx   # Full landing page experience
+│   │   │   ├── nature-swarm-canvas.tsx  # Particle canvas with nature bg
+│   │   │   ├── floating-header.tsx      # Sticky navigation header
+│   │   │   ├── floating-footer.tsx      # Sticky footer controls
+│   │   │   └── spline-backdrop.tsx      # Spline 3D backdrop
+│   │   │
+│   │   ├── optimization/
+│   │   │   └── PSOGraphs.tsx            # Convergence and Pareto charts
+│   │   │
+│   │   ├── ui/
+│   │   │   ├── aurora-button.tsx        # Animated button variant
+│   │   │   ├── gooey-filter.tsx         # SVG gooey effect filter
+│   │   │   ├── pixel-trail.tsx          # Interactive pixel trail
+│   │   │   └── button.tsx               # Base button primitive
+│   │   │
+│   │   ├── EnhancedMapComponent.tsx     # Leaflet map with PSO swarm layer
+│   │   ├── MapSwarmVisualization.tsx    # Swarm particles on map
+│   │   ├── SwarmCommandCenter.tsx       # Agent polling dashboard
+│   │   ├── SwarmVisualization.tsx       # SVG particle visualization
+│   │   ├── ResearchGradeDashboard.tsx   # Multi-tab analytics dashboard
+│   │   ├── DataDashboard.tsx            # Real-time data display
+│   │   ├── ErrorBanner.tsx              # Error notification component
+│   │   ├── ErrorInlineCard.tsx          # Inline error display
+│   │   ├── SkeletonCard.tsx             # Loading skeleton
+│   │   ├── SkeletonChart.tsx            # Chart loading placeholder
+│   │   ├── LoadingScreen.tsx            # Full-screen loader
+│   │   ├── nav-header.tsx               # Shared navigation bar
+│   │   ├── reveal-text.tsx              # Animated text reveal
+│   │   └── swarm-agents.tsx             # Agent status cards
+│   │
+│   ├── hooks/
+│   │   └── use-screen-size.ts           # Responsive breakpoint hook
+│   │
+│   ├── lib/                             # Core algorithms
+│   │   ├── pso/
+│   │   │   ├── mopso.ts                 # Multi-objective PSO with Pareto archive
+│   │   │   ├── optimizer.ts             # Classic PSO with stagnation escape
+│   │   │   ├── enhanced-optimizer.ts    # Extended PSO features
+│   │   │   └── helpers.ts               # Fitness interpretation and recommendations
+│   │   │
+│   │   ├── inference/
+│   │   │   ├── forecast.ts              # Demand and renewable forecasting
+│   │   │   ├── ols.ts                   # Ordinary least squares regression
+│   │   │   └── swarm.ts                 # Swarm inference utilities
+│   │   │
+│   │   ├── cache.ts                     # Request caching layer
+│   │   └── utils.ts                     # Shared utilities
+│   │
+│   └── types/
+│       └── spline-viewer.d.ts           # Spline 3D type declarations
+│
+├── scripts/                             # Automation scripts
+│   ├── fix-optimize-jsx.mjs
+│   └── patch-dashboard-ui.mjs
+│
+├── next.config.ts                       # Next.js configuration
+├── tailwind.config.ts                   # Tailwind CSS configuration
+├── tsconfig.json                        # TypeScript configuration
+├── vercel.json                          # Vercel deployment config
+├── postcss.config.js                    # PostCSS configuration
+├── .env.example                         # Environment variable template
+└── README.md                            # This file
+```
+
+## Key Features
+
+### Multi-Objective Optimization Engine
+
+The platform implements two PSO variants that optimize across five competing objectives simultaneously:
+
+| Objective | Description | Weight |
+|---|---|---|
+| Cost | Minimize infrastructure and operational expenses | 20% |
+| Sustainability | Maximize renewable energy integration | 25% |
+| Energy Output | Optimize total power generation capacity | 25% |
+| Disaster Resilience | Build redundant, fault-tolerant grid topology | 15% |
+| Maintenance Feasibility | Ensure operational and service accessibility | 15% |
+
+The MOPSO engine maintains a Pareto archive of non-dominated solutions using crowding distance sorting, enabling decision-makers to inspect the full trade-space rather than a single scalarized result.
+
+### Real-Time Data Integration
+
+Five independent data agents poll free, open APIs on every page load:
+
+- **Weather Agent** -- Open-Meteo: temperature, wind speed, precipitation
+- **Solar Agent** -- NASA POWER: solar irradiance, capacity factor estimation
+- **Carbon Agent** -- Open-Meteo: grid carbon intensity forecast (g CO2/kWh)
+- **Grid Agent** -- Simulated demand, reliability, voltage metrics
+- **Forecast Agent** -- 7-day projections for demand, solar, wind, pricing
+- **Market Agent** -- EIA electricity pricing and ancillary services data
+
+### Geospatial Visualization
+
+An interactive Leaflet map renders energy resource sites with layered controls for solar potential zones, wind corridors, and grid infrastructure. The PSO swarm visualization overlays particle positions directly on geographic coordinates, converging toward the optimal deployment site.
+
+### AI Decision Support
+
+The `/api/suggest` endpoint sends optimization results and real-time grid context to Google Gemini, which returns a structured analysis containing verdict, confidence score, key strengths, risks to monitor, and prioritized actions with impact ratings.
+
+## Optimization Engine
+
+### Algorithm Flow
+
+```mermaid
+flowchart TD
+    A[Initialize 42 particles with random positions] --> B[Evaluate 5-objective fitness for each particle]
+    B --> C[Update personal best for each particle]
+    C --> D[Update Pareto archive with non-dominated solutions]
+    D --> E[Compute crowding distance for archive members]
+    E --> F[Select leader from archive using tournament selection]
+    F --> G[Update velocity: cognitive + social + inertia]
+    G --> H[Update position with bounds clamping]
+    H --> I[Apply mutation to stagnating particles]
+    I --> J{Iteration < 120?}
+    J -- Yes --> B
+    J -- No --> K[Return Pareto archive + representative solution]
+```
+
+### Configuration
+
+```
+Particles:        42
+Iterations:       120
+Archive Limit:    80
+Leader Pool Size: 5
+Mutation Rate:    0.20
+Mutation Scale:   3.5
+Stagnation Thresh:10 iterations
+```
+
+### Particle Position Encoding
+
+Each particle is a 5-dimensional vector encoding:
+
+1. Solar capacity allocation (MW)
+2. Wind capacity allocation (MW)
+3. Cost budget allocation ($M)
+4. Risk mitigation investment
+5. Maintenance budget allocation
+
+## API Documentation
+
+### POST /api/optimize
+
+Runs the MOPSO algorithm and returns a representative solution from the Pareto archive.
+
+**Request:** No body required. Configuration is server-side.
+
+**Response:**
+
+```json
 {
-  cost: 0.2,              // 20% weight
-  sustainability: 0.25,   // 25% weight
-  energyOutput: 0.25,     // 25% weight
-  disasterResilience: 0.15, // 15% weight
-  maintenanceFeasibility: 0.15 // 15% weight
+  "success": true,
+  "result": {
+    "solarCapacity": 412.3,
+    "windCapacity": 287.5,
+    "cost": 65.2,
+    "sustainability": 82.1,
+    "energyOutput": 76.4,
+    "disasterResilience": 71.8,
+    "maintenanceFeasibility": 68.9,
+    "score": -0.523
+  },
+  "recommendations": [
+    "Increase solar capacity in high-irradiance zones",
+    "Reduce maintenance allocation to reallocate toward resilience"
+  ],
+  "iterations": 120,
+  "pareto_count": 47
 }
 ```
 
-## � New Components & Features
+### POST /api/suggest
 
-### Loading Screen with Swarm Visualization
-- Animated particle visualization during optimization
-- Real-time progress tracking (0-100%)
-- Objective status indicators
-- Beautiful gradient backgrounds
+Requests AI analysis of optimization results via Gemini.
 
-### Enhanced PSO Optimizer
-- Real-time iteration tracking
-- Particle position history
-- Global best fitness monitoring
-- Progress reporting for UI updates
+**Request:**
 
-### Real-Time Data Dashboard
-- Carbon intensity forecast
-- Electricity price trends
-- Grid demand prediction
-- System reliability metrics
-- 24-hour forecasts with charts
-
-## �📐 How PSO Works
-
-### Algorithm Flow
-1. **Initialize** - Random particles with velocities
-2. **Evaluate** - Calculate fitness for each particle (lower is better)
-3. **Update Personal Best** - Track best position for each particle
-4. **Update Global Best** - Track best position across all particles
-5. **Update Velocity** - Adjust direction based on personal + social influence
-6. **Repeat** - Until convergence or max iterations
-
-### Fitness Function
-Combines 5 objectives with configurable weights:
-```
-fitness = cost_score - (sustainability + energy + resilience + maintenance)
+```json
+{
+  "result": { "solarCapacity": 412.3, "windCapacity": 287.5, "cost": 65.2, ... },
+  "context": "Location: New York, NY. Temperature: 22C. Carbon: 185 g/kWh."
+}
 ```
 
-## 🌐 Free APIs Used
+**Response:**
 
-### Solar & Weather Data
-- **NASA POWER API** - Monthly solar irradiance data
-- **Open-Meteo API** - Weather forecasts, no API key needed
-
-### Energy Grid Data
-- **Carbon Intensity** - Real-time grid carbon emissions
-- **Electricity Prices** - Hourly market rates (integrates with regional ISOs)
-- **Grid Status** - Demand forecasts and system reliability
-
-### Geospatial Data
-- **OpenElevation** - Terrain elevation data
-- **Natural Earth** - Geographic features
-- **OpenStreetMap** - Infrastructure mapping
-
-All APIs are **100% FREE** with no payment required!
-
-## 🤖 Gemini API Integration
-
-Get free AI suggestions for your optimization results:
-
-1. Visit [ai.google.dev](https://ai.google.dev/)
-2. Create API key
-3. Add to `.env.local`:
-```
-NEXT_PUBLIC_GEMINI_API_KEY=your_key_here
+```json
+{
+  "success": true,
+  "suggestion": "The swarm solution balances cost and resilience effectively...",
+  "analysis": {
+    "summary": "1-2 sentence summary",
+    "verdict": "Strong configuration",
+    "confidence": 78,
+    "strengths": ["Multi-objective trade-off keeps the solution resilient..."],
+    "risks": ["Capital cost remains relatively high..."],
+    "actions": [
+      { "title": "Rebalance renewable capacity", "detail": "...", "impact": 5 }
+    ],
+    "metrics": [
+      { "label": "Cost", "value": "$65.2M", "note": "Capital profile" }
+    ]
+  }
+}
 ```
 
-## 📊 Deployment
+### GET /api/weather?latitude=40.71&longitude=-74.00
 
-### Deploy to Vercel (Recommended)
+Returns current weather and wind data from Open-Meteo.
+
+### GET /api/solar?latitude=40.71&longitude=-74.00
+
+Returns solar irradiance and capacity factor from NASA POWER.
+
+### GET /api/carbon?latitude=40.71&longitude=-74.00
+
+Returns current and forecasted carbon intensity (g CO2/kWh).
+
+### GET /api/grid-status?region=ny&hours=24
+
+Returns grid demand forecast, reliability score, and voltage metrics.
+
+### GET /api/forecast?latitude=40.71&longitude=-74.00&hours=168
+
+Returns 7-day forecasts for demand, solar generation, wind generation, and pricing with confidence intervals.
+
+### GET /api/market-data?region=PJM&horizon_hours=24
+
+Returns day-ahead and real-time electricity pricing, ancillary services costs, and congestion data.
+
+### GET /api/resilience?latitude=40.71&longitude=-74.00
+
+Returns hazard assessment for earthquake, hurricane, flood, wildfire, severe weather, and grid failure with ROI analysis for mitigation strategies.
+
+### GET /api/storage?latitude=40.71&longitude=-74.00&horizon_hours=24
+
+Returns energy storage capacity, optimal dispatch schedule, cycling strategies, and economic modeling.
+
+### GET /api/geo?latitude=40.71&longitude=-74.00
+
+Returns terrain analysis, land use classification, and infrastructure proximity data.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+
+### Installation
 
 ```bash
-# Install Vercel CLI
-npm i -g vercel
+git clone https://github.com/kris07hna/EnergySwarm.git
+cd EnergySwarm
 
-# Deploy
+npm install
+
+cp .env.example .env.local
+# Add NEXT_PUBLIC_GEMINI_API_KEY to .env.local
+
+npm run dev
+```
+
+Visit http://localhost:3000.
+
+### Environment Variables
+
+Only one variable is required for full functionality:
+
+```
+NEXT_PUBLIC_GEMINI_API_KEY=
+```
+
+All other data sources (NASA POWER, Open-Meteo, OpenStreetMap) are free and require no API keys.
+
+## Deployment
+
+### Vercel (Recommended)
+
+The project includes `vercel.json` with production settings:
+
+```bash
+npm run build
 vercel
 ```
 
-### Deploy to Railway or Render
+Or connect the repository directly in the Vercel dashboard. The build is configured to:
 
-```bash
-# Push to GitHub
-git push origin main
+- Compress responses
+- Strip the `X-Powered-By` header
+- Optimize images to AVIF/WebP formats
+- Set security headers (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection)
+- Deploy to the iad1 region
 
-# Connect repo to Railway/Render dashboard
-# Auto-deploys on push
+### Environment Configuration on Vercel
+
+Set the following in the Vercel project settings:
+
+| Variable | Value |
+|---|---|
+| `NEXT_PUBLIC_GEMINI_API_KEY` | Your Gemini API key from https://ai.google.dev |
+
+## Real-World Application
+
+### Utility-Scale Energy Planning
+
+Power companies evaluating multi-billion-dollar renewable investments require tools that model trade-offs across cost, grid reliability, and environmental impact. SwarmGrid AI provides:
+
+- **Site selection**: The MOPSO engine identifies optimal geographic coordinates for solar and wind deployment based on real irradiance, wind speed, and grid proximity data.
+- **Portfolio optimization**: Decision-makers can inspect the full Pareto frontier to choose between cheaper but riskier configurations versus more resilient but capital-intensive alternatives.
+- **Disaster preparedness**: The resilience module models exposure to hurricanes, earthquakes, floods, and wildfires, then quantifies the return on investment for hardening measures.
+
+### Municipal Energy Policy
+
+City planners without access to enterprise grid modeling software ($100,000+ for Plexos or Aurora) can use SwarmGrid AI to:
+
+- Model renewable energy targets against current grid capacity
+- Evaluate storage requirements for peak-shaving and emergency backup
+- Produce data-backed recommendations for public consultation
+
+### Academic Research
+
+The platform provides a complete implementation of MOPSO with Pareto archiving and crowding distance, making it suitable for:
+
+- Teaching evolutionary computation and multi-objective optimization
+- Extending the algorithm with new objectives or constraint handling
+- Publishing comparative studies against genetic algorithms or simulated annealing
+
+### Investment Analysis
+
+Renewable energy developers can prototype site evaluations by inputting coordinates to receive:
+
+- Estimated capacity factors for solar and wind at that location
+- Projected carbon intensity of the local grid
+- Preliminary cost estimates for grid connection
+
+## Scalability and Roadmap
+
+### Current Limitations
+
+| Area | Current State | Planned Improvement |
+|---|---|---|
+| Data freshness | API calls on page load | Server-side caching with configurable TTL |
+| Geographic scope | US-focused coordinates | Global coverage with region-specific API sources |
+| Optimization scale | 42 particles, 120 iterations | Configurable swarm size with GPU-accelerated evaluation |
+| Persistence | No database | Supabase/PostgreSQL for project history and collaboration |
+| Authentication | None | NextAuth.js with role-based access (Operator, Analyst, Planner) |
+| Export | Manual screenshot | PDF report generation and GeoJSON/CSV export |
+
+### Proposed Architecture for Production Scale
+
+```mermaid
+graph LR
+    subgraph Edge["Edge Network"]
+        CF["Cloudflare / Vercel Edge"]
+    end
+
+    subgraph App["Application Layer"]
+        NEXT["Next.js App Server"]
+        API["API Routes"]
+    end
+
+    subgraph Cache["Caching Layer"]
+        REDIS["Upstash Redis"]
+        CDN["Vercel Edge Cache"]
+    end
+
+    subgraph Compute["Compute Layer"]
+        PSO["MOPSO Worker"]
+        FCST["Forecast Worker"]
+        GEM["Gemini Worker"]
+    end
+
+    subgraph Store["Data Layer"]
+        PG["Supabase PostgreSQL"]
+        S3["Blob Storage"]
+    end
+
+    subgraph Data["External APIs"]
+        NASA["NASA POWER"]
+        OM["Open-Meteo"]
+        EIA["EIA"]
+        GEO["USGS/NOAA"]
+    end
+
+    CF --> NEXT
+    NEXT --> API
+    API --> REDIS
+    REDIS --> CDN
+    API --> PSO
+    API --> FCST
+    API --> GEM
+    PSO --> PG
+    FCST --> PG
+    PSO --> NASA
+    PSO --> OM
+    FCST --> EIA
+    API --> GEO
+    PSO --> S3
 ```
 
-## 📝 Project Structure
+### Phase 2 Features
 
-```
-swarmgrid-ai/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx           # Dashboard
-│   │   ├── optimize/          # Optimization page
-│   │   ├── maps/              # Maps page
-│   │   ├── api/               # API routes
-│   │   │   ├── optimize/      # PSO endpoint
-│   │   │   ├── weather/       # Weather data
-│   │   │   ├── solar/         # Solar data
-│   │   │   └── suggest/       # Gemini suggestions
-│   │   └── layout.tsx         # Root layout
-│   ├── components/
-│   │   ├── MapComponent.tsx   # Leaflet map
-│   │   └── ui.tsx             # UI primitives
-│   └── lib/
-│       └── pso/
-│           ├── optimizer.ts   # PSO algorithm
-│           └── helpers.ts     # Utilities
-├── public/                    # Static assets
-├── package.json               # Dependencies
-├── tsconfig.json              # TypeScript config
-├── tailwind.config.ts         # Tailwind config
-└── next.config.ts             # Next.js config
-```
+1. **Genetic Algorithm alternative** -- NSGA-II implementation for comparative optimization
+2. **Multi-region optimization** -- Simultaneous deployment planning across 2-5 regions with transmission constraints
+3. **Historical analysis** -- Time-series database of optimization runs with trend visualization
+4. **Team collaboration** -- Shared workspaces, comments on optimization results, approval workflows
+5. **Real-time WebSocket updates** -- Live streaming of particle positions during optimization
+6. **Custom constraint editor** -- User-defined constraints (budget caps, land availability, regulatory limits)
 
-## 🎓 Learning Resources
+## Business Impact
 
-- [PSO Algorithm Explained](https://en.wikipedia.org/wiki/Particle_swarm_optimization)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [Recharts](https://recharts.org/en-US/api)
-- [Leaflet.js](https://leafletjs.com/)
+### Market Opportunity
 
-## 🏆 Why This Approach?
+The global energy management systems market is projected to reach $47.8 billion by 2028 (Grand View Research). SwarmGrid AI addresses a gap in this market:
 
-### For Hackathons:
-✅ Complete, production-ready codebase
-✅ No paid APIs or authentication headaches
-✅ Unique technical differentiator (multi-objective PSO)
-✅ Impressive visualizations
-✅ Can be built in 2-4 days
+- **Existing tools** (Plexos, Aurora, PLEXOS) cost $100,000+ in licensing, require specialized training, and run on-premise.
+- **SwarmGrid AI** is open-source, browser-based, requires no installation, and provides comparable multi-objective optimization at zero licensing cost.
 
-### For Judges:
-✅ Fully open-source (GitHub credibility)
-✅ Original algorithm implementation (not just using libraries)
-✅ Real-world applicability (energy grids matter)
-✅ Scalable to smart city platforms
-✅ Well-documented code
+### Target Users
 
-## � API Endpoints
+| Segment | Use Case | Willingness to Pay |
+|---|---|---|
+| Utility companies | Portfolio optimization, site selection | High (enterprise SaaS) |
+| Municipal governments | Policy modeling, public consultation | Medium (annual license) |
+| Energy consultants | Client deliverables, rapid prototyping | Medium (per-project) |
+| Academic researchers | Teaching, algorithm comparison | Low (free/open-source) |
+| Hackathon teams | Proof-of-concept demonstrations | None (community) |
 
-### Optimization
-```
-POST /api/optimize
-```
-Runs multi-objective PSO algorithm with 5 objectives
-- Response: `{ result, recommendations, iterations }`
+### Competitive Advantages
 
-### Energy Data
-```
-GET /api/weather?latitude=40&longitude=-95
-```
-Gets weather forecast from Open-Meteo (temperature, wind, precipitation)
+1. **Zero-cost data pipeline** -- All external APIs are free with generous rate limits, eliminating data acquisition costs.
+2. **Browser-native execution** -- No server infrastructure required for the optimization engine; runs in the Next.js server function.
+3. **Multi-objective transparency** -- Unlike black-box optimizers, the Pareto archive exposes the full trade-space for human decision-making.
+4. **AI-augmented reasoning** -- Gemini provides structured analysis tied directly to optimization outputs, not generic recommendations.
+5. **Open-source extensibility** -- The algorithm implementation is fully auditable and modifiable, critical for regulatory compliance.
 
-```
-GET /api/solar?latitude=40&longitude=-95
-```
-Gets solar irradiance data from NASA POWER API
+## Tech Stack
 
-### Grid Data
-```
-GET /api/carbon?latitude=40&longitude=-95
-```
-Gets carbon intensity forecast (g CO₂/kWh)
+| Layer | Technology | Purpose |
+|---|---|---|
+| Framework | Next.js 16 | App Router, API routes, server components |
+| Language | TypeScript 5.7 | Type-safe application code |
+| Styling | Tailwind CSS 3.4 | Utility-first responsive design |
+| Components | Base UI, shadcn/ui | Accessible UI primitives |
+| Animation | Framer Motion 11 | Page transitions, scroll effects |
+| Charts | Recharts 2.15 | Time-series, bar, pie, scatter visualizations |
+| Mapping | Leaflet 1.9 + React Leaflet | Geospatial visualization with custom markers |
+| 3D | Spline (@splinetool/react-spline) | Interactive 3D backdrops |
+| AI | Google Gemini Flash | Structured decision analysis |
+| Data | NASA POWER, Open-Meteo, EIA, USGS | Free meteorological and energy APIs |
+| Deployment | Vercel | Serverless hosting, edge network |
 
-```
-GET /api/prices?region=US
-```
-Gets hourly electricity price forecasts
+## License
 
-```
-GET /api/grid-status?region=us-east&hours=24
-```
-Gets grid demand forecast and reliability metrics
-
-```
-GET /api/geo?latitude=40&longitude=-95
-```
-Gets geospatial data: terrain, infrastructure, population density
-
-### AI Suggestions
-```
-POST /api/suggest
-```
-Gets Gemini AI recommendations based on optimization results
-
-## �🚧 Future Enhancements
-
-- [ ] Genetic Algorithm option
-- [ ] Multi-region optimization
-- [ ] Real-time weather integration
-- [ ] User authentication
-- [ ] Database persistence
-- [ ] Export optimization results as PDF
-- [ ] Historical trend analysis
-- [ ] Team collaboration features
-
-## 📄 License
-
-MIT - Feel free to use in commercial or personal projects
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📞 Support
-
-- 📧 Email: support@swarmgrid.ai
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/swarmgrid-ai/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/swarmgrid-ai/discussions)
-
-## ⭐ Show Your Support
-
-If this project helps you, please give it a star! ⭐
-
----
-
-**Built with ❤️ for sustainable energy and open-source innovation**
+MIT License. See the license file for details.
