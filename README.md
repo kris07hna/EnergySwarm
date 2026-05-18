@@ -20,7 +20,7 @@ Multi-objective swarm intelligence platform for renewable energy grid optimizati
 
 ## Workflow
 
-![Workflow](https://raw.githubusercontent.com/kris07hna/EnergySwarm/main/public/workflow.png)
+![Workflow](./public/workflow.png)
 
 ### Step-by-step
 
